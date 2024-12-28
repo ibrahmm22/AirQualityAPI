@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  airquality-app:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./package*.json:/usr/src/app
+    depends_on:
+      - airquality-db
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+
+  airquality-db:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+
+volumes:
+  mongo_data:
